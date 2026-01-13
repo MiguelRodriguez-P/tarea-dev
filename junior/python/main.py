@@ -7,7 +7,33 @@ def calculate_panels(panel_width: int, panel_height: int,
     
     # Implementa acá tu solución
     
-    return 0
+    # Caso base: Si el panel no cabe en ninguna orientación, retornamos 0
+    panel_vertical = (panel_width <= roof_width and panel_height <= roof_height)
+    panel_rotado = (panel_height <= roof_width and panel_width <= roof_height)
+    
+    if not panel_vertical and not panel_rotado:
+        return 0
+
+    # primera opcion: intentar llenar una columna
+    width_restante = 0
+    if panel_width <= roof_width and panel_height <= roof_height:
+        # cuantos caben en la primera columna
+        paneles_en_columna = roof_height // panel_height
+        # Sumamos mas lo que quepa en el resto del techo
+        width_restante = paneles_en_columna + calculate_panels(panel_width, panel_height, 
+                                                      roof_width - panel_width, roof_height)
+
+    # OPCIÓN B: Intentar llenar una columna con el panel ROTADO
+    height_restante = 0
+    if panel_height <= roof_width and panel_width <= roof_height:
+        # cuantos caben en la primera columna si rotamos el panel
+        paneles_en_columna_r = roof_height // panel_width
+        # Sumamos mas lo que quepa en el resto del techo
+        height_restante = paneles_en_columna_r + calculate_panels(panel_width, panel_height, 
+                                                        roof_width - panel_height, roof_height)
+
+    # retornamos el máximo
+    return max(width_restante, height_restante)
 
 
 def run_tests() -> None:
